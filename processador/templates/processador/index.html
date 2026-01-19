@@ -1,0 +1,60 @@
+{% extends 'processador/base.html' %}
+
+{% block title %}Upload de Arquivos - ProFuturo{% endblock %}
+
+{% block content %}
+<h1>📊 Processador de Horas ProFuturo</h1>
+
+{% if erro %}
+<div class="alert alert-error">
+    <strong>Erro:</strong> {{ erro }}
+</div>
+{% endif %}
+
+<form method="post" action="{% url 'processar' %}" enctype="multipart/form-data" id="uploadForm">
+    {% csrf_token %}
+    
+    <div class="upload-area">
+        <label for="arquivo" class="upload-label">
+            📁 Escolher Arquivos Excel
+        </label>
+        <input 
+            type="file"
+            name="arquivo"
+            id="arquivo"
+            accept=".xlsx,.xls"
+            multiple
+            required
+        >
+        <div class="file-name" id="fileName"></div>
+        <p style="margin-top: 20px; color: #666;">
+            Você pode selecionar <strong>2 ou mais arquivos Excel</strong>
+        </p>
+    </div>
+
+    <button type="submit" id="submitBtn" disabled>
+        🚀 Processar Arquivos
+    </button>
+</form>
+
+<script>
+    const fileInput = document.getElementById('arquivo');
+    const fileName = document.getElementById('fileName');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    fileInput.addEventListener('change', function() {
+        if (this.files && this.files.length > 0) {
+            let nomes = [];
+            for (let i = 0; i < this.files.length; i++) {
+                nomes.push(this.files[i].name);
+            }
+
+            fileName.innerHTML = nomes.map(n => "📄 " + n).join("<br>");
+            submitBtn.disabled = false;
+        } else {
+            fileName.textContent = '';
+            submitBtn.disabled = true;
+        }
+    });
+</script>
+{% endblock %}

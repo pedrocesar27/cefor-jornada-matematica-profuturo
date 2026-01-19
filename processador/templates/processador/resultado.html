@@ -1,0 +1,53 @@
+{% extends 'processador/base.html' %}
+{% load custom_filters %}
+
+{% block title %}Resultado - ProFuturo{% endblock %}
+
+{% block content %}
+<h1>✅ Processamento Concluído!</h1>
+
+<div class="stats">
+    <div class="stat-card">
+        <div class="stat-label">Total de CPFs</div>
+        <div class="stat-value">{{ total_cpfs }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Total de Horas</div>
+        <div class="stat-value">{{ total_horas }}</div>
+    </div>
+</div>
+
+<h2 style="color: #667eea; margin: 30px 0;">Detalhes por CPF</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>CPF</th>
+            <th>Cursista</th>
+            <th>DRE</th>
+            <th>Nome da Escola</th>
+            <th>Carga Horária</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for linha in dados %}
+        <tr>
+            <td>{{ linha.CPF }}</td>
+            <td>{{ linha.Cursista }}</td>
+            <td>{{ linha.DRE }}</td>
+            <td>{{ linha|lookup:"Nome da escola" }}</td>
+            <td>{{ linha|lookup:"CH cursada"|floatformat:2 }} horas</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="actions">
+    <a href="{% url 'download' %}" class="btn-download">
+        ⬇️ Baixar Planilha Excel
+    </a>
+    <a href="{% url 'index' %}" class="btn-voltar">
+        🔄 Processar Outro Arquivo
+    </a>
+</div>
+{% endblock %}
